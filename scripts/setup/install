@@ -1,0 +1,40 @@
+#!/bin/bash
+
+set -e
+
+clog -t "erpnext: Build process starts ..."
+
+# create erp user to wheel group
+sudo chown -R erp:erp ${APP_DIR}
+
+export PATH=~/.local/bin/:${PATH}
+
+# install and init frappe-bench
+pip3 install --user frappe-bench
+bench init ${APP_DIR} --ignore-exist
+
+# Install ERPNext application
+cd ${APP_DIR}
+bench get-app erpnext --branch version-13
+
+# bench supervisor config
+sudo cat > /etc/supervisor.conf.d/bench.conf <<EOF
+[program:bench]
+directory=${APP_DIR}
+command=bench start
+user=erp
+autostart=true
+autorestart=true
+stdout_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
+stderr_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
+EOF
+clog -i "erpnext: Supervisor configuration for bench created."
+
+# Create profile for global env in different shells
+sudo cat > /etc/profile.d/erpnext.sh <<EOF
+export ERPNEXT_LOG_DIR=${ERPNEXT_LOG_DIR}
+EOF
+clog -i "erpnext: Global ENVs added to /etc/profile.d"
+
+# complete
+clog -t "erpnext: Build process completed."

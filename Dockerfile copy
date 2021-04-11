@@ -1,0 +1,23 @@
+#
+# Author            Frank,H.L.Lai <frank@leadstec.com>
+# Docker Version    20.10
+# Website           https://www.leadstec.com
+# Copyright         (C) 2021 LEADSTEC Systems. All rights reserved.
+#
+FROM leadstec/centos:8
+
+LABEL description="ERPNext image for VCubi" \
+    maintainer="Frank,H.L.Lai <frank@leadstec.com>"
+
+ENV ERPNEXT_LOG_DIR="${LOG_DIR}/erpnext"
+
+RUN apk --update add gcc g++ git musl-dev mariadb-client python3-dev py3-ldap3 py3-setuptools py3-openssl nodejs nodejs-npm \
+    yarn libffi-dev libxslt-dev fontconfig xvfb wkhtmltopdf postgresql-dev redis && \
+    rm /var/cache/apk/*
+
+# add install/startup scripts
+COPY scripts /scripts
+RUN bash /scripts/setup/install
+RUN rm -fr /scripts/setup
+
+# EXPOSE 80 443

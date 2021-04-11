@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+
+  erpnext:
+    build:
+      context: .
+    image: local/erpnext:latest
+    ports:
+      - "50302:8000"
+    volumes:
+      - ~/volumes/erpnext.local/log:/data/log
+      - ~/volumes/erpnext.local/persist:/data/persist
+    env_file:
+      - ../../env/debug.env
+    environment:
+      - EMAIL=frank@leadstec.com
+    secrets:
+      - deploy
+    hostname: erpnext.local
+    container_name: erpnext.local
+    entrypoint: ["lcsd", "run", "start", "---", "/scripts/debug.sh"]
+
+  db:
+    image: leadstec/mariadb:latest
+    expose:
+      - "3306"
+    volumes:
+      - ~/volumes/erpnext-db.local/log:/data/log
+      - ~/volumes/erpnext-db.local/db:/data/db
+      - ~/volumes/erpnext-db.local/persist:/data/persist
+    environment:
+      - MARIADB_DB_USER=erpnext
+      - MARIADB_DB_NAME=erpnext
+      - MARIADB_REMOTE_ADMIN_USER=root
+      - MARIADB_CHARACTER_SET=utf8mb4
+      - MARIADB_COLLATION=utf8mb4_unicode_ci
+    secrets:
+      - deploy
+    hostname: erpnext.local
+    container_name: erpnext-db.local
+
+secrets:
+  deploy:
+    file: ./deploy

@@ -1,0 +1,54 @@
+{
+    "registry": "leadstec",
+    "image": "erpnext",
+    "version": "",
+    "build": "",
+    "schema": "20210411",
+    "lcs_schema": "1.6.0",
+    "permissions": [
+      {
+        "chmod": "775",
+        "chown": "erp:erp",
+        "path": "${APP_DIR}"
+      }
+    ],
+    "envs": [
+      {
+        "name": "ERPNEXT_SITE_URL",
+        "default": "`hostname -f`",
+        "replacement": []
+      },
+      {
+        "name": "ERPNEXT_DBHOST",
+        "default": "db",
+        "replacement": []
+      }
+    ],
+    "secrets": [
+      {
+        "file": "/run/secrets/deploy",
+        "required": true,
+        "replacements": [
+          {
+            "name": "ERPNEXT_ADMIN_PASS",
+            "section": "erpnext",
+            "pattern": "{{ERPNEXT_ADMIN_PASS}}",
+            "path": "/scripts/erpnext.post-secret.sh"
+          },
+          {
+            "name": "MARIADB_REMOTE_ADMIN_USER",
+            "section": "mariadb",
+            "pattern": "{{MARIADB_REMOTE_ADMIN_USER}}",
+            "path": "/scripts/erpnext.post-secret.sh"
+          },
+          {
+            "name": "MARIADB_REMOTE_ADMIN_PASSWD",
+            "section": "mariadb",
+            "pattern": "{{MARIADB_REMOTE_ADMIN_PASSWD}}",
+            "path": "/scripts/erpnext.post-secret.sh"
+          }
+        ]
+      }
+    ],
+    "storages": []
+  }

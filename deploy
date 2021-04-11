@@ -1,0 +1,11 @@
+
+mariadb:
+{
+  MARIADB_REMOTE_ADMIN_USER="root";
+  MARIADB_REMOTE_ADMIN_PASSWD="pdaesd";
+}
+
+erpnext:
+{
+  ERPNEXT_ADMIN_PASSWD="pdaesd";
+}
