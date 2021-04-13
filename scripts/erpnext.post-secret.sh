@@ -6,7 +6,7 @@
 function wait_for_database() {
     printf "Waiting for database server '${ERPNEXT_DBHOST}' to accept connections"
     prog="mysqladmin -h ${ERPNEXT_DBHOST} -u {{MARIADB_REMOTE_ADMIN_USER}} -p{{MARIADB_REMOTE_ADMIN_PASSWD}} status"
-    timeout=120
+    timeout=60
     while ! ${prog} >/dev/null 2>&1
     do
         timeout=$(expr $timeout - 1)
@@ -26,9 +26,11 @@ wait_for_database
 # Determine new install or updating
 if [[ ${SETUP_MODE} == 'new' ]]; then
 
+    export PATH=/home/erp/.local/bin/:${PATH}
+
     cd ${APP_DIR}
     sudo -HEu erp bench new-site ${ERPNEXT_SITE_URL} --db-host ${ERPNEXT_DBHOST} \
-        --mariadb-root-name {{MARIADB_REMOTE_ADMIN_USER}} --mariadb-root-password {{MARIADB_REMOTE_ADMIN_PASSWD}} \
+        --mariadb-root-username {{MARIADB_REMOTE_ADMIN_USER}} --mariadb-root-password {{MARIADB_REMOTE_ADMIN_PASSWD}} \
         --admin-password {{ERPNEXT_ADMIN_PASSWD}}
 
     clog -i "erpnext: Site ${ERPNEXT_SITE_URL} created."

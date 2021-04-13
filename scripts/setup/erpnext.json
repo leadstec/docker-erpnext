@@ -30,9 +30,9 @@
         "required": true,
         "replacements": [
           {
-            "name": "ERPNEXT_ADMIN_PASS",
+            "name": "ERPNEXT_ADMIN_PASSWD",
             "section": "erpnext",
-            "pattern": "{{ERPNEXT_ADMIN_PASS}}",
+            "pattern": "{{ERPNEXT_ADMIN_PASSWD}}",
             "path": "/scripts/erpnext.post-secret.sh"
           },
           {
