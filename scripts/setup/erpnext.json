@@ -36,15 +36,9 @@
             "path": "/scripts/erpnext.post-secret.sh"
           },
           {
-            "name": "MARIADB_REMOTE_ADMIN_USER",
-            "section": "mariadb",
-            "pattern": "{{MARIADB_REMOTE_ADMIN_USER}}",
-            "path": "/scripts/erpnext.post-secret.sh"
-          },
-          {
-            "name": "MARIADB_REMOTE_ADMIN_PASSWD",
-            "section": "mariadb",
-            "pattern": "{{MARIADB_REMOTE_ADMIN_PASSWD}}",
+            "name": "ERPNEXT_MARIADB_ROOT_PASSWD",
+            "section": "erpnext",
+            "pattern": "{{ERPNEXT_MARIADB_ROOT_PASSWD}}",
             "path": "/scripts/erpnext.post-secret.sh"
           }
         ]

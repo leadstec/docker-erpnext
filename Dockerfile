@@ -13,16 +13,17 @@ LABEL description="ERPNext image for VCubi" \
 ENV ERPNEXT_LOG_DIR="${LOG_DIR}/erpnext"
 
 # install packages
-RUN yum install -y gcc make git bzip2 mariadb nginx supervisor python3 python3-devel redis nodejs && \
+RUN yum install -y gcc make git bzip2 mariadb mariadb-server nginx supervisor python3 python3-devel redis nodejs expect && \
     npm install -g yarn
 
 # install frappe
 RUN useradd -m erp -G wheel && \
     chown -R erp:erp ${APP_DIR}
+
 USER erp
 RUN export PATH=~/.local/bin/:${PATH} && \
     pip3 install --user frappe-bench && \
-    bench init ${APP_DIR} --ignore-exist && \
+    bench init --frappe-branch version-13 --ignore-exist ${APP_DIR} && \
     cd ${APP_DIR} && \
     bench get-app erpnext --branch version-13
 

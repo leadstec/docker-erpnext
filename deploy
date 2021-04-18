@@ -8,4 +8,5 @@ mariadb:
 erpnext:
 {
   ERPNEXT_ADMIN_PASSWD="pdaesd";
+  ERPNEXT_MARIADB_ROOT_PASSWD="pdaesd";
 }

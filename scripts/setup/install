@@ -7,17 +7,45 @@ clog -t "erpnext: Build process starts ..."
 # add schema
 lcs-cli schema add --section erpnext
 
-# bench supervisor config
-cat > /etc/supervisor.conf.d/bench.conf <<EOF
-[program:bench]
-directory=${APP_DIR}
-command=/home/erp/.local/bin/bench start
-user=erp
+# mariadb config
+cat <<EOF >/etc/my.cnf.d/erpnext.cnf
+[mysqld]
+innodb-file-format=barracuda
+innodb-file-per-table=1
+innodb-large-prefix=1
+character-set-client-handshake = FALSE
+character-set-server = utf8mb4
+collation-server = utf8mb4_unicode_ci
+
+[mysql]
+default-character-set = utf8mb4
+EOF
+
+
+# supervisor
+cat > /etc/supervisor.conf.d/mariadb.conf <<EOF
+[program:mariadb]
+directory=/
+command=/usr/bin/mysqld_safe
+user=mysql
 autostart=true
 autorestart=true
+stopasgroup=true
 stdout_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
 stderr_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
 EOF
+
+# # bench supervisor config
+# cat > /etc/supervisor.conf.d/bench.conf <<EOF
+# [program:bench]
+# directory=${APP_DIR}
+# command=/home/erp/.local/bin/bench start
+# user=erp
+# autostart=true
+# autorestart=true
+# stdout_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
+# stderr_logfile=${LOG_DIR}/supervisor/%(program_name)s.log
+# EOF
 clog -i "erpnext: Supervisor configuration for bench created."
 
 # Create profile for global env in different shells

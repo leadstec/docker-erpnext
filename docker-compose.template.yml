@@ -14,7 +14,8 @@ services:
     env_file:
       - ../../env/debug.env
     environment:
-      - EMAIL=frank@leadstec.com
+      - ERPNEXT_SITE_URL=erpnext.local
+      - ERPNEXT_DBHOST=erpnext-db.local
     secrets:
       - deploy
     hostname: erpnext.local
@@ -35,10 +36,27 @@ services:
       - MARIADB_REMOTE_ADMIN_USER=root
       - MARIADB_CHARACTER_SET=utf8mb4
       - MARIADB_COLLATION=utf8mb4_unicode_ci
+      - MARIADB_MAX_ALLOWED_PACKET=32M
     secrets:
       - deploy
-    hostname: erpnext.local
+    hostname: erpnext-db.local
     container_name: erpnext-db.local
+
+  dev:
+    image: leadstec/centos:latest
+    ports:
+      - "50302:8000"
+    volumes:
+      - ~/volumes/erpnext-dev.local/log:/data/log
+      - ~/volumes/erpnext-dev.local/persist:/data/persist
+    env_file:
+      - ../../env/debug.env
+    environment:
+      - ERPNEXT_SITE_URL=erpnext-dev.local
+      - ERPNEXT_DBHOST=localhost
+    hostname: erpnext-dev.local
+    container_name: erpnext-dev.local
+    entrypoint: ["lcsd", "run", "start", "---", "/scripts/debug.sh"]
 
 secrets:
   deploy:
