@@ -81,14 +81,15 @@ if [[ ${SETUP_MODE} == 'new' ]]; then
     # echo ${SECURE_MYSQL}
     # clog -i "erpnext: MariaDB setup secured."
 
-    # cd ${APP_DIR}
-    # sudo -HEu erp /home/erp/.local/bin/bench new-site ${ERPNEXT_SITE_URL} --db-host ${ERPNEXT_DBHOST} \
-    #     --mariadb-root-username {{MARIADB_REMOTE_ADMIN_USER}} --mariadb-root-password {{MARIADB_REMOTE_ADMIN_PASSWD}} \
-    #     --admin-password {{ERPNEXT_ADMIN_PASSWD}}
+    cd ${APP_DIR}
+    sudo -HEu erp /home/erp/.local/bin/bench new-site ${ERPNEXT_SITE_URL} \
+        --mariadb-root-password {{ERPNEXT_MARIADB_ROOT_PASSWD}} \
+        --admin-password {{ERPNEXT_ADMIN_PASSWD}}
 
-    # clog -i "erpnext: Site ${ERPNEXT_SITE_URL} created."
+    clog -i "erpnext: Site ${ERPNEXT_SITE_URL} created."
 
-    # sudo -HEu erp /home/erp/.local/bin/bench install-app erpnext
+    sudo -HEu erp /home/erp/.local/bin/bench install-app erpnext
+
     clog -i "erpnext: ERPNext installed."
 
     # shutdown mariadb to wait for supervisor
